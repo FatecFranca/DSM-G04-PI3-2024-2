@@ -1,0 +1,15 @@
+{
+  "name": "dsm-g04-pi3-2024-2",
+  "version": "1.0.0",
+  "description": "Repositório do GRUPO 04 do Projeto Interdisciplinar do 3º semestre DSM 2024/2. Alunos: Dimerson Ferreira, Nathan Bizinoto, Paulo Henrique Borges de Andrade Filho, Vinícius Rodrigues Oliveira.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

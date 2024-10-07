@@ -14,6 +14,7 @@ datasource db {
 }
 
 model Usuario {
+<<<<<<< HEAD
   id                    String          @id @default(auto()) @map("_id") @db.ObjectId
   nome                  String
   email                 String          @unique
@@ -46,4 +47,38 @@ model SessaoPomodoro {
   tempo_pausa           Int
   data_hora_inicio      DateTime
   data_hora_fim         DateTime
+=======
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  nome               String
+  email              String    @unique
+  telefone           String?   // Opcional
+  data_nascimento    DateTime
+  senha              String
+  historico_tarefas  Tarefa[]  @relation("HistoricoTarefas") // Nomeando a relação com Tarefa (histórico)
+  tarefas_ativas     Tarefa[]  @relation("TarefasAtivas") // Nomeando a relação com Tarefa (ativas)
+}
+
+model Tarefa {
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  titulo             String
+  descricao          String?
+  data_criacao       DateTime
+  prazo              DateTime?
+  status             String
+  usuario            Usuario   @relation("TarefasAtivas", fields: [usuarioId], references: [id]) // Referência ao campo "tarefas_ativas"
+  usuarioId          String    @db.ObjectId
+  historico_usuario  Usuario   @relation("HistoricoTarefas", fields: [historicoUsuarioId], references: [id]) // Referência ao campo "historico_tarefas"
+  historicoUsuarioId String    @db.ObjectId
+  sessoes            SessaoTomafoco[]  // Relacionamento com SessaoTomaFoco
+}
+
+model SessaoTomafoco {
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  tarefa             Tarefa    @relation(fields: [tarefaId], references: [id]) // Relação com Tarefa
+  tarefaId           String    @db.ObjectId
+  tempo_foco         Int
+  tempo_pausa        Int
+  data_hora_inicio   DateTime
+  data_hora_fim      DateTime
+>>>>>>> 2805ff2ceaa44defb8b192dff8efa89992c9a636
 }
