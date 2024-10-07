@@ -4,4 +4,4 @@ Repositório do GRUPO 04 do Projeto Interdisciplinar do 3º semestre DSM 2024/2.
 Rodar a aplicação em React
 npx create-react-app ./tomafoco
 
-npm strt
+npm start
