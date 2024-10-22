@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const TimerContext = createContext();
 
 export const TimerProvider = ({ children }) => {
-  const [time, setTime] = useState(25 * 60);
+  const [time, setTime] = useState(1 * 60);
   const [isActive, setIsActive] = useState(false);
   const [currentMode, setCurrentMode] = useState('TomaFoco');
   const [settings, setSettings] = useState({
