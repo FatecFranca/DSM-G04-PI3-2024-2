@@ -7,6 +7,7 @@ import Settings from './components/Settings';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import { TimerProvider } from './context/TimerContext';
+import logo_tomafoco from './assets/logo_tomafoco.png';
 
 function MainApp() {
   const navigate = useNavigate(); 
@@ -15,7 +16,7 @@ function MainApp() {
     <TimerProvider>
       <div className="app">
         <header className="app-header">
-          <img src="" alt="Logo" className="header-logo" />
+          <img src={logo_tomafoco} alt="Logo" className="header-logo" />
           <h1 className="header-title">TomaFoco</h1>
           <div className="header-left">
             <button className="header-button" onClick={() => navigate('/login')}>Login</button>
@@ -41,7 +42,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<MainApp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/home" element={<MainApp />} />
