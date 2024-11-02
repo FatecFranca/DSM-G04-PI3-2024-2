@@ -21,7 +21,6 @@ export const TimerProvider = ({ children }) => {
     } else if (time === 0) {
       clearInterval(interval);
       setIsActive(false);
-      // Here you can add logic to switch between modes
     }
     return () => clearInterval(interval);
   }, [isActive, time]);
@@ -30,7 +29,13 @@ export const TimerProvider = ({ children }) => {
   const pauseTimer = () => setIsActive(false);
   const resetTimer = () => {
     setIsActive(false);
-    setTime(settings[currentMode.toLowerCase().replace(' ', '')] * 60);
+    // Verifica se o modo atual é válido e redefine o tempo
+    const newTime = settings[currentMode.toLowerCase().replace(' ', '')] * 60;
+    if (!isNaN(newTime)) {
+      setTime(newTime);
+    } else {
+      console.error("Erro: O modo atual não é válido.");
+    }
   };
 
   const updateSettings = (newSettings) => {
@@ -40,7 +45,12 @@ export const TimerProvider = ({ children }) => {
 
   const switchMode = (mode) => {
     setCurrentMode(mode);
-    setTime(settings[mode.toLowerCase().replace(' ', '')] * 60);
+    const newTime = settings[mode.toLowerCase().replace(' ', '')] * 60;
+    if (!isNaN(newTime)) {
+      setTime(newTime);
+    } else {
+      console.error("Erro: O modo selecionado não é válido.");
+    }
     setIsActive(false);
   };
 
