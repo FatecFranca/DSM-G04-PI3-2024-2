@@ -1,11 +1,16 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Timer from './components/Timer';
 import Controls from './components/Controls';
 import TaskList from './components/TaskList';
 import Settings from './components/Settings';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 import { TimerProvider } from './context/TimerContext';
 
-function App() {
+function MainApp() {
+  const navigate = useNavigate(); 
+
   return (
     <TimerProvider>
       <div className="app">
@@ -13,8 +18,8 @@ function App() {
           <img src="" alt="Logo" className="header-logo" />
           <h1 className="header-title">TomaFoco</h1>
           <div className="header-left">
-            <button className="header-button">Login</button>
-            <button className="header-button">Perfil</button>
+            <button className="header-button" onClick={() => navigate('/login')}>Login</button>
+            <button className="header-button" onClick={() => navigate('/profile')}>Perfil</button>
           </div>
         </header>
         <div className="main-content">
@@ -29,6 +34,19 @@ function App() {
         </div>
       </div>
     </TimerProvider>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<MainApp />} />
+      </Routes>
+    </Router>
   );
 }
 
