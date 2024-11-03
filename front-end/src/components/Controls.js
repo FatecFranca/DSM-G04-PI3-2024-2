@@ -7,7 +7,7 @@ function Controls() {
   return (
     <div className="controls">
       {!isActive ? (
-        <button onClick={startTimer}>Inicio</button>
+        <button onClick={startTimer}>Iniciar</button>
       ) : (
         <button onClick={pauseTimer}>Pausar</button>
       )}

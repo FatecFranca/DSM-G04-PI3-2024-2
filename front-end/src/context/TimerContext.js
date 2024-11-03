@@ -11,6 +11,7 @@ export const TimerProvider = ({ children }) => {
     shortBreak: 5,
     longBreak: 15,
   });
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     let interval = null;
@@ -29,7 +30,6 @@ export const TimerProvider = ({ children }) => {
   const pauseTimer = () => setIsActive(false);
   const resetTimer = () => {
     setIsActive(false);
-    // Verifica se o modo atual é válido e redefine o tempo
     const newTime = settings[currentMode.toLowerCase().replace(' ', '')] * 60;
     if (!isNaN(newTime)) {
       setTime(newTime);
@@ -61,6 +61,7 @@ export const TimerProvider = ({ children }) => {
         isActive,
         currentMode,
         ...settings,
+        tasks,
         startTimer,
         pauseTimer,
         resetTimer,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const Login = () => {
 
   return (
     <div className="full-height">
+      <Header />
       <div className="form-container">
         <h2>Login</h2>
         <form onSubmit={handleLogin}>

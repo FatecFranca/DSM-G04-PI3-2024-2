@@ -1,8 +1,10 @@
 import React from 'react';
+import Header from './Header';
 
 const SignUp = () => {
   return (
     <div className="full-height">
+      <Header />
       <div className="form-container">
         <h2>Registrar</h2>
         <form>
