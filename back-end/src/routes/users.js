@@ -1,36 +1,55 @@
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../config/database.js'
 
 const router = Router()
-const prisma = new PrismaClient()
 
-// Criar um novo usuário
 router.post('/', async (req, res) => {
   try {
     const { nome, email, telefone, data_nascimento, senha } = req.body
+    console.log('Requisição recebida:', {
+      headers: req.headers,
+      body: req.body
+    });
 
     if (!nome || !email || !senha) {
       return res.status(400).json({ error: 'Nome, email e senha são obrigatórios.' })
+    }
+
+    if (!data_nascimento) {
+      return res.status(400).json({ error: 'Data de nascimento é obrigatória.' })
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Formato de email inválido.' })
+    }
+
+    const usuarioExistente = await prisma.usuario.findUnique({
+      where: { email }
+    });
+
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'Email já cadastrado.' })
     }
 
     const novoUsuario = await prisma.usuario.create({
       data: {
         nome,
         email,
-        telefone,
+        telefone: telefone || '',
         data_nascimento: new Date(data_nascimento),
         senha,
       },
     })
 
+    console.log('Usuário criado:', novoUsuario)
     res.status(201).json(novoUsuario)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Erro ao criar o usuário.' })
+    console.error('Erro detalhado:', error)
+    res.status(500).json({ error: `Erro ao criar o usuário: ${error.message}` })
   }
 })
 
-// Listar todos os usuários
 router.get('/', async (req, res) => {
   try {
     const usuarios = await prisma.usuario.findMany()
@@ -41,7 +60,6 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Atualizar um usuário
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
@@ -65,7 +83,6 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// Deletar um usuário
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params
@@ -80,5 +97,31 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Erro ao deletar o usuário.' })
   }
 })
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { email }
+    });
+
+    if (!usuario || usuario.senha !== senha) {
+      return res.status(401).json({ error: 'Email ou senha inválidos.' });
+    }
+
+    // Aqui você pode implementar a geração de token JWT se desejar
+    res.json({
+      user: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao realizar login.' });
+  }
+});
 
 export default router

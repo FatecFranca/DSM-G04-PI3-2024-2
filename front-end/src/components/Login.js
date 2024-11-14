@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../services/auth';
 import Header from './Header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate('/home');
+    try {
+      await authService.login(email, senha);
+      navigate('/home');
+    } catch (error) {
+      setError('Email ou senha inválidos');
+    }
   };
 
   return (
@@ -17,6 +24,7 @@ const Login = () => {
       <Header />
       <div className="form-container">
         <h2>Login</h2>
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin}>
           <label>E-mail:</label>
           <input

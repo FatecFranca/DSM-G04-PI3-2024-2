@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client'
 const router = Router()
 const prisma = new PrismaClient()
 
-// Criar uma nova tarefa
 router.post('/', async (req, res) => {
   try {
     const { titulo, descricao, prazo, usuarioId } = req.body
@@ -31,7 +30,6 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Listar todas as tarefas
 router.get('/', async (req, res) => {
   try {
     const tarefas = await prisma.tarefa.findMany({
@@ -44,7 +42,6 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Atualizar uma tarefa
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
@@ -67,7 +64,6 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// Deletar uma tarefa
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params
