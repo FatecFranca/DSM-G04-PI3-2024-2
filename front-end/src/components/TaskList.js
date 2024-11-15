@@ -1,23 +1,60 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { TimerContext } from '../context/TimerContext';
+import { createTask, getTasks, deleteTask } from '../services/api';
 
 function TaskList() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const { currentMode } = useContext(TimerContext);
 
-  const addTask = (e) => {
-    e.preventDefault();
-    if (newTask.trim()) {
-      setTasks([...tasks, { text: newTask, completed: false }]);
-      setNewTask('');
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
+
+  const carregarTarefas = async () => {
+    try {
+      const tarefasCarregadas = await getTasks();
+      setTasks(tarefasCarregadas);
+    } catch (error) {
+      console.error('Erro ao carregar tarefas:', error);
     }
   };
 
-  const toggleTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = !updatedTasks[index].completed;
-    setTasks(updatedTasks);
+  const handleTaskCompletion = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setTasks(tasks.filter(task => task.id !== taskId));
+    } catch (error) {
+      console.error('Erro ao excluir tarefa:', error);
+      alert('Erro ao excluir a tarefa.');
+    }
+  };
+
+  const addTask = async (e) => {
+    e.preventDefault();
+    if (newTask.trim()) {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.id) {
+          throw new Error('Usuário não está logado');
+        }
+
+        const novaTarefa = {
+          titulo: newTask,
+          descricao: '',
+          usuarioId: user.id,
+          status: 'ativa',
+          data_criacao: new Date()
+        };
+
+        const tarefaCriada = await createTask(novaTarefa);
+        setTasks([...tasks, tarefaCriada]);
+        setNewTask('');
+      } catch (error) {
+        console.error('Erro ao criar tarefa:', error);
+        alert('Erro ao criar tarefa. Por favor, verifique se está logado.');
+      }
+    }
   };
 
   return (
@@ -33,12 +70,14 @@ function TaskList() {
         <button type="submit">Adicionar Tarefa</button>
       </form>
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index} onClick={() => toggleTask(index)}>
-            <input type="checkbox" checked={task.completed} readOnly />
-            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-              {task.text}
-            </span>
+        {tasks.map((task) => (
+          <li key={task.id} className="task-item">
+            <input
+              type="checkbox"
+              onChange={() => handleTaskCompletion(task.id)}
+              className="task-checkbox"
+            />
+            <span>{task.titulo}</span>
           </li>
         ))}
       </ul>

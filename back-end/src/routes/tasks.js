@@ -12,14 +12,23 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Título e usuário são obrigatórios.' })
     }
 
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId }
+    })
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' })
+    }
+
     const novaTarefa = await prisma.tarefa.create({
       data: {
         titulo,
-        descricao,
+        descricao: descricao || '',
         data_criacao: new Date(),
         prazo: prazo ? new Date(prazo) : null,
         status: 'ativa',
         usuario: { connect: { id: usuarioId } },
+        historico_usuario: { connect: { id: usuarioId } }
       },
     })
 

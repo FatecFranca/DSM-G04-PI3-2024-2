@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await authService.login(email, senha);
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setError('Email ou senha inválidos');
     }
