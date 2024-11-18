@@ -18,7 +18,7 @@ app.use(cookieParser())
 app.use(cors({
   origin: 'http://localhost:3000', // URL do seu front-end
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }))
 
 // Teste de conexão ao iniciar o servidor

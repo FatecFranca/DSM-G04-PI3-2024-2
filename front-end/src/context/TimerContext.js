@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const TimerContext = createContext();
 
 export const TimerProvider = ({ children }) => {
-  const [time, setTime] = useState(1 * 60);
+  const [time, setTime] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [currentMode, setCurrentMode] = useState('TomaFoco');
   const [settings, setSettings] = useState({
@@ -30,12 +30,7 @@ export const TimerProvider = ({ children }) => {
   const pauseTimer = () => setIsActive(false);
   const resetTimer = () => {
     setIsActive(false);
-    const newTime = settings[currentMode.toLowerCase().replace(' ', '')] * 60;
-    if (!isNaN(newTime)) {
-      setTime(newTime);
-    } else {
-      console.error("Erro: O modo atual não é válido.");
-    }
+    setTime(25 * 60);
   };
 
   const updateSettings = (newSettings) => {
@@ -45,13 +40,12 @@ export const TimerProvider = ({ children }) => {
 
   const switchMode = (mode) => {
     setCurrentMode(mode);
-    const newTime = settings[mode.toLowerCase().replace(' ', '')] * 60;
-    if (!isNaN(newTime)) {
-      setTime(newTime);
-    } else {
-      console.error("Erro: O modo selecionado não é válido.");
-    }
+    setTime(25 * 60);
     setIsActive(false);
+  };
+
+  const updateTasks = (newTasks) => {
+    setTasks(newTasks);
   };
 
   return (
@@ -62,6 +56,7 @@ export const TimerProvider = ({ children }) => {
         currentMode,
         ...settings,
         tasks,
+        updateTasks,
         startTimer,
         pauseTimer,
         resetTimer,

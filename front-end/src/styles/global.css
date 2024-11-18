@@ -11,16 +11,13 @@ body {
 h1 {
   font-family: Verdana;
   font-size: 2em;
-  color: rgba(255, 0, 0, 0.6);
-  background-color: rgba(255, 255, 0, 0.166);
+  color: #ffffff;
   text-align: center;
   height: 5vh;
   letter-spacing: 2px;
   font-weight: bold;
   padding: 5px;
   margin: 20px;
-  border: 1px solid rgba(122, 122, 122, 0.601);
-  border-radius: 30px;
 }
 
 .app {
@@ -33,41 +30,43 @@ h1 {
 }
 
 .app-header {
-  background-color: #4caf50;
-  height: 60px;
+  background-color: #2E7D32;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  position: absolute;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 1000;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.header-left {
-  display: flex;
-  gap: 1rem;
-  margin-left: auto;
 }
 
 .header-title {
-  flex-grow: 1;
-  text-align: center;
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
 .header-logo-button {
-  background: none; 
-  border: none; 
-  border-radius: 50%; 
-  padding: 0; 
-  cursor: pointer; 
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .header-logo {
-  width: 50px; 
-  height: 50px; 
+  height: 40px;
+  margin-right: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.05);
 }
 
 .main-content {
@@ -81,30 +80,85 @@ h1 {
 .left-container {
   flex: 1;
   margin-right: 1rem;
-  background-color: rgb(242, 242, 242);
+  background-color: #2E7D32;
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: #ffffff;
 }
 
 .right-container {
   flex: 1;
-  background-color: rgb(242, 242, 242);
-  padding: 1rem;
+  text-align: center;
+  background-color: transparent;
+  padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: white;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+}
 
+.right-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.right-container input[type="text"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.right-container button {
+  width: 200px;
+  margin: 0 auto;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.right-container button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.right-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 2rem;
+  text-align: left;
+  width: 100%;
+}
+
+.right-container li {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  border-radius: 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.right-container li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .image {
@@ -115,7 +169,7 @@ h1 {
 .timer {
   font-size: 2em;
   margin: 2rem 0;
-  color: #333;
+  color: #ffffff;
   text-shadow: none;
   display: flex;
   flex-direction: column;
@@ -131,7 +185,7 @@ h1 {
   margin: 0 0.5rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  background-color: #61dafb;
+  background-color: rgba(255, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 5px;
@@ -139,41 +193,115 @@ h1 {
 }
 
 .controls button:hover {
-  background-color: #21a1f1;
+  background-color: rgba(255, 0, 0, 0.8);
+  transform: translateY(-2px);
 }
 
 .task-list {
   margin-top: 2rem;
-  text-align: left;
+  text-align: center;
+  background-color: #2E7D32;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: white;
+  width: 80%;
+  margin: 2rem auto;
+}
+
+.task-list h3 {
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.task-list form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .task-list input[type="text"] {
-  width: 50%;
-  padding: 0.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .task-list button {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  background-color: #61dafb;
+  width: 200px;
+  margin: 0 auto;
+  background-color: rgba(255, 0, 0, 0.6);
   color: white;
   border: none;
+  padding: 0.8rem 1.5rem;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .task-list button:hover {
-  background-color: #21a1f1;
+  background-color: rgba(255, 0, 0, 0.8);
+  transform: translateY(-2px);
 }
 
 .task-list ul {
   list-style-type: none;
   padding: 0;
+  margin-top: 2rem;
+  text-align: left;
+  width: 100%;
 }
 
 .task-list li {
+  background-color: rgba(255, 0, 0, 0.6);
   margin: 0.5rem 0;
+  padding: 0.8rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.task-list li:hover {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+.task-checkbox {
+  margin-right: 1rem;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
+}
+
+.task-list span {
+  color: white;
+}
+
+.error-message {
+  color: #ff6b6b;
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .task-list {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .task-list input[type="text"] {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .task-list button {
+    width: 100%;
+  }
 }
 
 .settings {
@@ -195,7 +323,7 @@ h1 {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  background-color: #61dafb;
+  background-color: rgba(255, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 5px;
@@ -203,28 +331,31 @@ h1 {
 }
 
 .settings button:hover {
-  background-color: #21a1f1;
+  background-color: rgba(255, 0, 0, 0.8);
+  transform: translateY(-2px);
 }
 
 .header-button {
-  font-size: 1rem;
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  background-color: #61dafb;
+  background-color: rgba(255, 0, 0, 0.6);
   color: white;
   border: none;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .header-button:hover {
-  background-color: #21a1f1;
+  background-color: rgba(255, 0, 0, 0.8);
+  transform: translateY(-2px);
 }
 
-.header-logo {
-  height: 40px;
-  margin-right: 1rem;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Media Queries para responsividade */
@@ -267,7 +398,7 @@ html, body {
 }
 
 .form-container {
-  background-color: #f2f2f2; 
+  background-color: #2E7D32; 
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -279,7 +410,7 @@ html, body {
 .form-container h2 {
   font-family: 'Verdana', sans-serif;
   font-size: 1.8em;
-  color: rgba(255, 0, 0, 0.6);
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
@@ -287,7 +418,7 @@ html, body {
   display: block;
   font-size: 0.9em;
   font-weight: bold;
-  color: #555;
+  color: #ffffff;
   margin: 1rem 0 0.3rem;
   text-align: left;
 }
@@ -333,11 +464,11 @@ html, body {
 
 .form-container p {
   font-size: 0.9em;
-  color: #555;
+  color: #ffffff;
 }
 
 .form-container p a {
-  color: rgba(255, 0, 0, 0.6);
+  color: rgba(255, 0, 0, 0.8);
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
@@ -382,47 +513,63 @@ html, body {
 
 .profile-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  padding-top: 60px;
+  overflow-y: auto;
 }
 
 .profile-content {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 2rem;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 800px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.profile-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.profile-right {
-  flex: 1;
+.profile-left, .profile-right {
+  width: 100%;
+  max-width: 600px;
 }
 
 .profile-card {
-  background: white;
+  background-color: #2E7D32;
   border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.profile-card h2, .profile-card h3 {
+  color: white;
+  margin-bottom: 1.5rem;
 }
 
 .user-details {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.user-avatar img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
+.user-info {
+  text-align: center;
+}
+
+.user-info h3 {
+  margin-bottom: 0.5rem;
+}
+
+.user-info p {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .timer-settings {
@@ -432,18 +579,18 @@ html, body {
 .timer-item {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease;
 }
 
-.timer-label {
-  color: #666;
+.timer-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.timer-label, .timer-value {
+  color: white;
   font-weight: 500;
-}
-
-.timer-value {
-  color: #21a1f1;
-  font-weight: 600;
 }
 
 .tasks-container {
@@ -453,24 +600,12 @@ html, body {
 .task-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  gap: 10px;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease;
 }
 
-.task-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.task-item span.completed {
-  text-decoration: line-through;
-  color: #999;
-}
-
-@media (max-width: 768px) {
-  .profile-content {
-    flex-direction: column;
-  }
+.task-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }

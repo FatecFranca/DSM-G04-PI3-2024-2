@@ -3,27 +3,38 @@ import { TimerContext } from '../context/TimerContext';
 import { createTask, getTasks, deleteTask } from '../services/api';
 
 function TaskList() {
-  const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
-  const { currentMode } = useContext(TimerContext);
+  const { tasks, updateTasks, currentMode } = useContext(TimerContext);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    carregarTarefas();
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.id) {
+      carregarTarefas();
+    }
   }, []);
 
   const carregarTarefas = async () => {
     try {
       const tarefasCarregadas = await getTasks();
-      setTasks(tarefasCarregadas);
+      updateTasks(tarefasCarregadas);
     } catch (error) {
       console.error('Erro ao carregar tarefas:', error);
+      setError('Faça login para ver suas tarefas');
     }
   };
 
   const handleTaskCompletion = async (taskId) => {
     try {
       await deleteTask(taskId);
-      setTasks(tasks.filter(task => task.id !== taskId));
+      const updatedTasks = tasks.filter(task => task.id !== taskId);
+      updateTasks(updatedTasks);
+      
+      // Atualizar o cache do perfil
+      const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+      profileData.tarefas = updatedTasks;
+      localStorage.setItem('profileData', JSON.stringify(profileData));
+      localStorage.setItem('profileCacheTime', Date.now().toString());
     } catch (error) {
       console.error('Erro ao excluir tarefa:', error);
       alert('Erro ao excluir a tarefa.');
@@ -48,7 +59,15 @@ function TaskList() {
         };
 
         const tarefaCriada = await createTask(novaTarefa);
-        setTasks([...tasks, tarefaCriada]);
+        const updatedTasks = [...tasks, tarefaCriada];
+        updateTasks(updatedTasks);
+        
+        // Atualizar o cache do perfil
+        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        profileData.tarefas = updatedTasks;
+        localStorage.setItem('profileData', JSON.stringify(profileData));
+        localStorage.setItem('profileCacheTime', Date.now().toString());
+        
         setNewTask('');
       } catch (error) {
         console.error('Erro ao criar tarefa:', error);
@@ -57,9 +76,19 @@ function TaskList() {
     }
   };
 
+  if (!localStorage.getItem('user')) {
+    return (
+      <div className="task-list">
+        <h3>Tarefas - {currentMode}</h3>
+        <p>Faça login para gerenciar suas tarefas</p>
+      </div>
+    );
+  }
+
   return (
     <div className="task-list">
       <h3>Tarefas - {currentMode}</h3>
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={addTask}>
         <input
           type="text"

@@ -124,4 +124,49 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/:id/profile', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const usuario = await prisma.usuario.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        data_nascimento: true,
+        tarefas_ativas: {
+          orderBy: {
+            data_criacao: 'desc'
+          }
+        },
+        historico_tarefas: {
+          orderBy: {
+            data_criacao: 'desc'
+          }
+        }
+      }
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    // Combina as tarefas ativas e históricas
+    const todasTarefas = [
+      ...usuario.tarefas_ativas,
+      ...usuario.historico_tarefas
+    ];
+
+    res.json({
+      ...usuario,
+      tarefas: todasTarefas,
+      lastUpdate: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar perfil do usuário.' });
+  }
+});
+
 export default router
