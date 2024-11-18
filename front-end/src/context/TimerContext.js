@@ -5,7 +5,7 @@ export const TimerContext = createContext();
 export const TimerProvider = ({ children }) => {
   const [time, setTime] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
-  const [currentMode, setCurrentMode] = useState('TomaFoco');
+  const [currentMode, setCurrentMode] = useState('pomodoro');
   const [settings, setSettings] = useState({
     pomodoro: 25,
     shortBreak: 5,
@@ -13,15 +13,25 @@ export const TimerProvider = ({ children }) => {
   });
   const [tasks, setTasks] = useState([]);
 
+  const playSound = () => {
+    const audio = new Audio('/som/sfx-piano-effect5.mp3');
+    audio
+      .play()
+      .catch((error) => console.error('Erro ao reproduzir o áudio:', error));
+  };
+
+
+  // Controle do timer
   useEffect(() => {
     let interval = null;
     if (isActive && time > 0) {
       interval = setInterval(() => {
-        setTime((time) => time - 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
     } else if (time === 0) {
       clearInterval(interval);
       setIsActive(false);
+      playSound(); 
     }
     return () => clearInterval(interval);
   }, [isActive, time]);
@@ -30,17 +40,17 @@ export const TimerProvider = ({ children }) => {
   const pauseTimer = () => setIsActive(false);
   const resetTimer = () => {
     setIsActive(false);
-    setTime(25 * 60);
+    setTime(settings[currentMode] * 60);
   };
 
   const updateSettings = (newSettings) => {
     setSettings(newSettings);
-    resetTimer();
+    setTime(newSettings[currentMode] * 60);
   };
 
   const switchMode = (mode) => {
     setCurrentMode(mode);
-    setTime(25 * 60);
+    setTime(settings[mode] * 60);
     setIsActive(false);
   };
 
@@ -54,7 +64,7 @@ export const TimerProvider = ({ children }) => {
         time,
         isActive,
         currentMode,
-        ...settings,
+        settings,
         tasks,
         updateTasks,
         startTimer,

@@ -1,69 +1,74 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { TimerContext } from '../context/TimerContext';
 import Header from './Header';
-import { getTasks, getProfile, deleteTask } from '../services/api';
 
 const Profile = () => {
-  const { pomodoro, shortBreak, longBreak, tasks, updateTasks } = useContext(TimerContext);
-  const [error, setError] = useState('');
-  const [profileData, setProfileData] = useState(null);
+  const { pomodoro, shortBreak, longBreak } = useContext(TimerContext);
+  const [localTasks, setLocalTasks] = useState([]); // Tarefas ativas
+  const [completedTasks, setCompletedTasks] = useState([]); // Tarefas finalizadas
+  const [profileData, setProfileData] = useState(null); // Dados do usuário
+  const [isLoading, setIsLoading] = useState(true); // Controle de carregamento
 
   useEffect(() => {
-    const loadProfileAndTasks = async () => {
+    const loadTasksAndProfile = async () => {
       try {
+        setIsLoading(true);
+
+        // Obter usuário do localStorage
         const user = JSON.parse(localStorage.getItem('user'));
-        if (!user || !user.id) return;
-
-        // Carregar perfil
-        const cachedProfile = localStorage.getItem('profileData');
-        const cacheTime = localStorage.getItem('profileCacheTime');
-        const CACHE_DURATION = 5 * 60 * 1000;
-
-        if (cachedProfile && cacheTime) {
-          const timeDiff = Date.now() - parseInt(cacheTime);
-          if (timeDiff < CACHE_DURATION) {
-            setProfileData(JSON.parse(cachedProfile));
-          }
+        if (!user || !user.id) {
+          console.error('Usuário não encontrado no localStorage');
+          setIsLoading(false);
+          return;
         }
 
-        // Carregar tarefas atualizadas
-        const tarefasCarregadas = await getTasks();
-        updateTasks(tarefasCarregadas);
+        // Carregar tarefas do backend
+        const taskResponse = await fetch(`http://localhost:3000/tasks/user/${user.id}`);
+        const tasks = await taskResponse.json();
+        setLocalTasks(tasks.filter((task) => task.status !== 'concluida')); // Tarefas ativas
+        setCompletedTasks(tasks.filter((task) => task.status === 'concluida')); // Tarefas finalizadas
 
-        // Atualizar perfil se necessário
-        const data = await getProfile(user.id);
-        setProfileData(data);
-        
-        localStorage.setItem('profileData', JSON.stringify(data));
-        localStorage.setItem('profileCacheTime', Date.now().toString());
+        // Simula carregamento do perfil
+        setProfileData({
+          nome: user.nome || 'Usuário',
+          email: user.email || 'Email não disponível',
+        });
+
+        setIsLoading(false);
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-        setError('Erro ao carregar dados do perfil');
+        console.error('Erro ao carregar tarefas ou perfil:', error);
+        setIsLoading(false);
       }
     };
 
-    loadProfileAndTasks();
-  }, [updateTasks]);
+    loadTasksAndProfile();
+  }, []);
 
   const handleTaskCompletion = async (taskId) => {
     try {
-      await deleteTask(taskId);
-      const updatedTasks = tasks.filter(task => task.id !== taskId);
-      updateTasks(updatedTasks);
+      // Enviar requisição ao backend para atualizar o status da tarefa
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'concluida' }), // Atualiza o status para "concluída"
+      });
 
-      // Atualizar o cache do perfil
-      const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
-      profileData.tarefas = updatedTasks;
-      localStorage.setItem('profileData', JSON.stringify(profileData));
-      localStorage.setItem('profileCacheTime', Date.now().toString());
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar a tarefa.');
+      }
+
+      const updatedTask = await response.json();
+
+      // Atualizar no frontend: mover a tarefa para o histórico
+      setLocalTasks(localTasks.filter((task) => task.id !== taskId));
+      setCompletedTasks([...completedTasks, updatedTask]); // Adiciona ao histórico
     } catch (error) {
-      console.error('Erro ao excluir tarefa:', error);
-      setError('Erro ao excluir a tarefa.');
+      console.error('Erro ao concluir a tarefa:', error);
     }
   };
 
-  if (!profileData || pomodoro === undefined || shortBreak === undefined || longBreak === undefined) {
-    return <div>Carregando...</div>;
+  if (isLoading) {
+    return <div>Carregando...</div>; // Exibe "Carregando" enquanto os dados são carregados
   }
 
   return (
@@ -75,8 +80,8 @@ const Profile = () => {
             <h2>Perfil do Usuário</h2>
             <div className="user-details">
               <div className="user-info">
-                <h3>{profileData.nome}</h3>
-                <p>{profileData.email}</p>
+                <h3>{profileData?.nome}</h3>
+                <p>{profileData?.email}</p>
               </div>
             </div>
           </div>
@@ -104,18 +109,35 @@ const Profile = () => {
           <div className="profile-card">
             <h3>Minhas Tarefas</h3>
             <div className="tasks-container">
-              {tasks && tasks.map((task) => (
-                <div key={task.id} className="task-item">
-                  <input 
-                    type="checkbox" 
-                    onChange={() => handleTaskCompletion(task.id)}
-                    checked={task.status === 'concluida'} 
-                  />
-                  <span className={task.status === 'concluida' ? 'completed' : ''}>
-                    {task.titulo}
-                  </span>
-                </div>
-              ))}
+              {localTasks.length > 0 ? (
+                localTasks.map((task) => (
+                  <div key={task.id} className="task-item">
+                    <input
+                      type="checkbox"
+                      onChange={() => handleTaskCompletion(task.id)}
+                      checked={false}
+                    />
+                    <span>{task.titulo}</span>
+                  </div>
+                ))
+              ) : (
+                <p>Nenhuma tarefa ativa.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="profile-card">
+            <h3>Histórico de Tarefas Finalizadas</h3>
+            <div className="tasks-container">
+              {completedTasks.length > 0 ? (
+                completedTasks.map((task) => (
+                  <div key={task.id} className="task-item completed">
+                    <span>{task.titulo}</span>
+                  </div>
+                ))
+              ) : (
+                <p>Nenhuma tarefa finalizada ainda.</p>
+              )}
             </div>
           </div>
         </div>
