@@ -8,7 +8,9 @@ import usersRouter from './routes/users.js'
 import tasksRouter from './routes/tasks.js' // Adicionando o CRUD de tarefas
 import { testConnection } from './config/database.js'
 
-const app = express()
+const express = require('express');
+const cors = require('cors');
+const app = express();
 
 // Middlewares
 app.use(logger('dev'))

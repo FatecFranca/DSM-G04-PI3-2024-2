@@ -87,6 +87,10 @@ Seja você um estudante, programador ou alguém que só quer organizar as tarefa
 
    Acesse o app em: `http://localhost:3000`.
 
+   Front-end (Vercel) https://tomafoco.vercel.app/
+   Back-end (Render) https://dsm-g04-pi3-2024-2.onrender.com
+
+   Ajustes do cors para rodar a aplicação web
 ---
 
 
